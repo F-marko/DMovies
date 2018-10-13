@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoWizz", "MoWizz\MoWizz.csproj", "{8A55BD46-22A1-4BFA-8DCE-CA215DE618B6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8A55BD46-22A1-4BFA-8DCE-CA215DE618B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A55BD46-22A1-4BFA-8DCE-CA215DE618B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A55BD46-22A1-4BFA-8DCE-CA215DE618B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A55BD46-22A1-4BFA-8DCE-CA215DE618B6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3EF4220C-F866-4681-A717-B3E22EDC641A}
+	EndGlobalSection
+EndGlobal
