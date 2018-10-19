@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EmployeeService.Facebook;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.OAuth;
 using MoWizz.Providers;
@@ -61,6 +63,20 @@ namespace MoWizz
                 ClientId = "281604665806-52fd8nebfk5ks7m9050a5vim1ef1506f.apps.googleusercontent.com",
                 ClientSecret = "5jb_lazDnbQ--dVUtIXrSiSO"
             });
+
+
+            var facebookOptions = new FacebookAuthenticationOptions()
+            {
+                AppId = "171497007115533",
+                AppSecret = "2b24f7dbd4130d4b9c776cef8999ca04",
+                BackchannelHttpHandler = new FacebookBackChannelHandler(),
+                UserInformationEndpoint = "https://graph.facebook.com/v2.4/me?fields=id,email"
+            };
+
+            facebookOptions.Scope.Add("email");
+            app.UseFacebookAuthentication(facebookOptions);
         }
+
+
     }
 }

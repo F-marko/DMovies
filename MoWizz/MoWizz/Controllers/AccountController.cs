@@ -263,6 +263,7 @@ namespace MoWizz.Controllers
 
             bool hasRegistered = user != null;
 
+
             if (hasRegistered)
             {
                 Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);

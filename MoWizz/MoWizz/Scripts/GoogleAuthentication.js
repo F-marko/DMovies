@@ -13,7 +13,7 @@ function getAccessToken() {
 
 function isUserRegistered(accessToken) {
     $.ajax({
-        url: 'api/Account/UserInfo',
+        url: '/api/Account/UserInfo',
         method: 'GET',
         headers: {
             'content-type': 'application/json',
@@ -21,26 +21,30 @@ function isUserRegistered(accessToken) {
         },
         success: function (response) {
             if (response.HasRegistered) {
-                localStorage.setItem('accessToken', accessToken);
-                localStorage.setItem('userName', response.Email);
-                window.location.href = "Index.html";
-            } else {
-                signupExternalUser(accessToken);
+                localStorage.setItem("accessToken", accessToken);
+                localStorage.setItem("userName", response.Email);
+                window.location.href = "Data.html";
+            }
+            else {
+                // Pass the login provider (Facebook or Google)
+                signupExternalUser(accessToken, response.LoginProvider);
             }
         }
     });
 }
 
-function signupExternalUser(accessToken) {
+function signupExternalUser(accessToken, provider) {
     $.ajax({
-        url: 'api/Account/RegisterExternal',
+        url: '/api/Account/RegisterExternal',
         method: 'POST',
         headers: {
             'content-type': 'application/json',
             'Authorization': 'Bearer ' + accessToken
         },
-        success: function (response) {
-            window.location.href = "/api/Account/ExternalLogin?provider=Google&response_type=token&client_id=self&redirect_uri=http%3A%2F%2Flocalhost%3A49891%2FLogin.html&state=0M3Y_Vcd9josAb6LHqta_D3x8GkK0R2TSoDFaaDmowM1";
+        success: function () {
+            // Use the provider parameter value instead of
+            // hardcoding the provider name
+            window.location.href = "/api/Account/ExternalLogin?provider=" + provider + "&response_type=token&client_id=self&redirect_uri=https%3a%2f%2flocalhost%3a44316%2fLogin.html&state=GerGr5JlYx4t_KpsK57GFSxVueteyBunu02xJTak5m01";
         }
     });
 }
