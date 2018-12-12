@@ -1,0 +1,49 @@
+﻿<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper black center-align">
+            <a href="#!" style="position:static" class="brand-logo">Search Movie</a>
+            @*<ul class="right hide-on-med-and-down">
+                    <li><a href="sass.html">Sass</a></li>
+                    <li><a href="badges.html">Components</a></li>
+                </ul>*@
+        </div>
+    </nav>
+</div>
+<img src="~/Images/movies.jpg" class="blackandwhite" style="opacity:0.9; object-fit: cover; object-position: center; height: 400px; width: 100%;">
+<div class="row">
+    <div class="row" style="margin-top:50px">
+        <div class="input-field col s6 offset-s3  teal-text">
+            <i class="material-icons prefix">search</i>
+            <input id="icon_prefix2" type="text" class="validate">
+            <label for="icon_prefix2">Find movie</label>
+        </div>
+    </div>
+    <div class="progress" id="progressbar" style="display:none">
+        <div class="indeterminate"></div>
+    </div>
+    <div class="divider"></div>
+    <div id="results">
+
+    </div>
+</div>
+<script>
+    document.querySelector('#icon_prefix2').addEventListener('keypress', function (e) {
+        var key = e.which || e.keyCode;
+        if (key === 13) { // 13 is enter
+            console.log($('#icon_prefix2').val());
+            $('#progressbar').show();
+            $.ajax({
+                url: '/TMDB/Search?query=' + $('#icon_prefix2').val(),
+                success: function (result) {
+                    document.getElementById('results').innerHTML = result;
+                    $('#progressbar').hide();
+                },
+                error: function () {
+                    document.getElementById('results').innerHTML = 'Error';
+                    $('#progressbar').hide();
+
+                }
+            });
+        }
+    });
+</script>

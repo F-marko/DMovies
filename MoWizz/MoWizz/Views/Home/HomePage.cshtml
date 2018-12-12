@@ -1,0 +1,38 @@
+﻿@model MoWizz.Models.HomeViewModel
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper black center-align">
+            <a href="#!" style="position:static" class="brand-logo">Trending</a>
+            @*<ul class="right hide-on-med-and-down">
+                    <li><a href="sass.html">Sass</a></li>
+                    <li><a href="badges.html">Components</a></li>
+                </ul>*@
+        </div>
+    </nav>
+</div>
+@foreach (var item in Model.trending.results) {
+    var path = item.backdrop_path != null && item.backdrop_path != "" ? item.backdrop_path : item.poster_path;
+    var imagePath = "http://image.tmdb.org/t/p/w500//" + path;
+    <div class="parallax-container">
+        <div class="parallax"><img src="@imagePath"></div>
+    </div>
+    <div class="section white">
+        <div class="row container">
+            <div class="col s8">
+                <h2 class="header">@item.title</h2>
+                <p class="grey-text text-darken-3 lighten-3">@item.overview</p>
+            </div>
+            <div class="col s4 valign-wrapper center-align teal-text" style="font-size: 5rem">
+                @*<i class="material-icons" style="margin-right:20px">star</i>*@ 
+                <b>@item.vote_count votes</b>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $('.parallax').parallax();
+    });
+
+</script>

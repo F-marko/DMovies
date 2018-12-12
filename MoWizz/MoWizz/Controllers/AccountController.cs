@@ -66,7 +66,7 @@ namespace MoWizz.Controllers
             {
                 Email = User.Identity.GetUserName(),
                 HasRegistered = externalLogin == null,
-                LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
+                LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null,
             };
         }
 
@@ -337,7 +337,7 @@ namespace MoWizz.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email, Gender = model.Gender };
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 

@@ -11,6 +11,8 @@ namespace MoWizz.Models
     {
         public string Email { get; set; }
 
+        public string Gender { get; set; }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser, string> manager, string authenticationType)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
