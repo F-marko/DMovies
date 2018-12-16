@@ -1,0 +1,70 @@
+﻿@model MoWizz.Models.TMDBPopularMoviesResponse
+@if (Model.results.Count() > 1) {
+    for (var i = 0; i < Model.results.Count() - 1; i += 2) {
+        var item1 = Model.results.ElementAt(i);
+        var item2 = Model.results.ElementAt(i + 1);
+        <a href="/TMDB/details?movieid=@item1.id">
+            <div class="row hoverable black-text">
+                @{
+                    var imagePath = "http://image.tmdb.org/t/p/w500//" + item1.poster_path;
+                }
+                <div class="col s6">
+                    <img src="@imagePath" style="object-fit: cover; object-position: center; height: 300px; width: 100%;">
+                </div>
+                <div class="col s6">
+                    <h3>@item1.title</h3>
+                    @item1.overview
+                </div>
+            </div>
+        </a>
+        <a href="/TMDB/details?movieid=@item2.id">
+            <div class="row hoverable black-text">
+                @{
+                    imagePath = "http://image.tmdb.org/t/p/w500//" + item2.poster_path;
+                }
+                <div class="col s6">
+                    <h3>@item2.title</h3>
+                    @item2.overview
+                </div>
+                <div class="col s6">
+                    <img src="@imagePath" style="object-fit: cover; object-position: center; height: 300px; width: 100%;">
+                </div>
+
+            </div>
+        </a>
+    }
+}
+@if (Model.results.Count() == 1) {
+    var item1 = Model.results.ElementAt(0);
+    <a href="/TMDB/details?movieid=@item1.id">
+        <div class="row hoverable black-text">
+            @{
+                var imagePath = "http://image.tmdb.org/t/p/w500//" + item1.poster_path;
+            }
+            <div class="col s6">
+                <img src="@imagePath" style="object-fit: cover; object-position: center; height: 300px; width: 100%;">
+            </div>
+            <div class="col s6">
+                <h3>@item1.title</h3>
+                @item1.overview
+            </div>
+        </div>
+    </a>
+}
+@*@if (Model.total_pages > 1) {
+        <ul class="pagination center-align">
+            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+            @for (int i = 1; i < Model.total_pages && i < 10; ++i) {
+                if (i == Model.page) {
+                    <li class="active teal"><a href="#">@i</a></li>
+                } else {
+                    <li class="waves-effect"><a href="#!">@i</a></li>
+                }
+            }
+            <li class="disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+        </ul>
+    }*@
+@if (Model.total_results == 0) {
+    <h4 class="teal-text center-align"><i>We didn't find any movie, try something else..</i></h4>
+
+}

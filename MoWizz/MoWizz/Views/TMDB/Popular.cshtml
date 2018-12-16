@@ -1,0 +1,42 @@
+﻿@model IEnumerable<MoWizz.Models.PopularMovie>
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper black center-align">
+            <a href="#!" style="position:static" class="brand-logo">Most popular</a>
+        </div>
+    </nav>
+</div>
+
+@for (var i = 0; i < Model.Count(); i += 2) {
+    var item1 = Model.ElementAt(i);
+    var item2 = Model.ElementAt(i + 1);
+    <a href="/TMDB/details?movieid=@item1.id">
+        <div class="row hoverable black-text">
+            @{
+                var imagePath = "http://image.tmdb.org/t/p/w500//" + item1.poster_path;
+            }
+            <div class="col s6">
+                <img src="@imagePath" style="object-fit: cover; object-position: center; height: 300px; width: 100%;">
+            </div>
+            <div class="col s6">
+                <h3>@item1.title</h3>
+                @item1.overview
+            </div>
+        </div>
+    </a>
+    <a href="/TMDB/details?movieid=@item2.id">
+        <div class="row hoverable black-text">
+            @{
+                imagePath = "http://image.tmdb.org/t/p/w500//" + item2.poster_path;
+            }
+            <div class="col s6">
+                <h3>@item2.title</h3>
+                @item2.overview
+            </div>
+            <div class="col s6">
+                <img src="@imagePath" style="object-fit: cover; object-position: center; height: 300px; width: 100%;">
+            </div>
+
+        </div>
+    </a>
+}

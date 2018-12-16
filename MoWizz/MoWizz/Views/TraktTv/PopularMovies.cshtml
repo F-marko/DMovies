@@ -1,0 +1,30 @@
+﻿@model IEnumerable<MoWizz.Models.PopularMovieViewModel>
+
+<div class="col s12">
+    <h2 class="header">Popular</h2>
+    <div class="card horizontal">
+        <div class="card-stacked">
+            <div class="card-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Year</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.title</td>
+                                <td>@item.year</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>            </div>
+            <div class="card-action">
+                <a href="#">This is a link</a>
+            </div>
+        </div>
+    </div>
+</div>

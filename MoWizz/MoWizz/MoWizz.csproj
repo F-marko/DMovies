@@ -121,6 +121,9 @@
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -223,6 +226,10 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\NYTController.cs" />
+    <Compile Include="Controllers\TMDBController.cs" />
+    <Compile Include="Controllers\TraktTvController.cs" />
+    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Controllers\MoviesController.cs" />
     <Compile Include="Facebook\FacebookBackChannelHandler.cs" />
     <Compile Include="Global.asax.cs">
@@ -230,7 +237,19 @@
     </Compile>
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\ArticleResponseModel.cs" />
+    <Compile Include="Models\CreditsResponse.cs" />
+    <Compile Include="Models\DetailsResponse.cs" />
+    <Compile Include="Models\DetailsViewModel.cs" />
+    <Compile Include="Models\GenreResponse.cs" />
+    <Compile Include="Models\HomeViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\MovieImages.cs" />
+    <Compile Include="Models\PopularMovieViewModel.cs" />
+    <Compile Include="Models\ResultModel.cs" />
+    <Compile Include="Models\ReviewModel.cs" />
+    <Compile Include="Models\SimilarMoviesResponse.cs" />
+    <Compile Include="Models\TMDBPopularMoviesResponse.cs" />
     <Compile Include="Models\Movie.cs" />
     <Compile Include="Models\OMDBApiModel.cs" />
     <Compile Include="Models\TVMazeApiModel.cs" />
@@ -251,6 +270,7 @@
     <Content Include="css\bootstrap.min.css" />
     <Content Include="css\device-mockups.min.css" />
     <Content Include="css\grayscale.css" />
+    <Content Include="css\materialize.css" />
     <Content Include="css\simple-line-icons.css" />
     <Content Include="Data.html" />
     <Content Include="Details.html" />
@@ -1785,6 +1805,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\materialize.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\MovieInfo.js" />
     <Content Include="Scripts\respond.js" />
@@ -1808,6 +1829,14 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Shared\LandingLayout.cshtml" />
+    <Content Include="Views\NYT\Last10Reviews.cshtml" />
+    <Content Include="Views\NYT\FindReview.cshtml" />
+    <Content Include="Views\Home\HomePage.cshtml" />
+    <Content Include="Views\TraktTv\PopularMovies.cshtml" />
+    <Content Include="Views\TMDB\Popular.cshtml" />
+    <Content Include="Views\TMDB\Details.cshtml" />
+    <Content Include="Views\TMDB\SearchItem.cshtml" />
+    <Content Include="Views\TMDB\SearchMovie.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

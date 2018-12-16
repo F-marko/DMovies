@@ -70,7 +70,7 @@ namespace MoWizz
                 AppId = "171497007115533",
                 AppSecret = "2b24f7dbd4130d4b9c776cef8999ca04",
                 BackchannelHttpHandler = new FacebookBackChannelHandler(),
-                UserInformationEndpoint = "https://graph.facebook.com/v2.4/me?fields=id,email"
+                UserInformationEndpoint = "https://graph.facebook.com/v2.4/me?fields=id,email,gender"
             };
 
             facebookOptions.Scope.Add("email");
