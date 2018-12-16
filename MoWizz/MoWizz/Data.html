@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>MoWizz-Home</title>
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body style="padding-top:20px">
+    <div class="col-md-10 col-md-offset-1">
+
+        <div class="well">
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="success">
+                        <td colspan="3">
+                            <h1 style="font-family:Castellar">MoWizz</h1>
+                            <input type="button" id="btnLogout" class="btn btn-success pull-right" value="Log out" />
+                            <a class="btn btn-success pull-right" href="Watchlist.html" style="margin-right:20px">My Watchlist</a>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            Search For A Movie
+                        </td>
+                        <td>
+                            <input type="text" id="txtSearch" placeholder="Search..." />
+                        </td>
+                    </tr>
+                    <tr class="success">
+                        <td colspan="2">
+                            <input type="button" id="btnLoadMovie" class="btn btn-success" value="Search" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="well hidden" id="divData">
+            <div class="row" id="divInfo">
+
+            </div>
+        </div>
+
+        <div class="modal fade" tabindex="-1" id="errorModal"
+             data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            &times;
+                        </button>
+                        <h4 class="modal-title">Session Expired</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h2 class="modal-title">Please close this message to login again</h2>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-success">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="divError" class="alert alert-danger collapse">
+            <a id="linkClose" class="close" href="#">&times;</a>
+            <div id="divErrorText"></div>
+        </div>
+
+    </div>
+
+    <script src="Scripts/jquery-1.10.2.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+
+    <script src="Scripts/MovieInfo.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (sessionStorage.getItem('accessToken') == null) {
+                window.location.href = "Login.html";
+            }
+
+            $('#errorModal').on('hidden.bs.modal', function () {
+                window.location.href = "Login.html";
+            });
+
+            $('#linkClose').click(function () {
+                $('#divError').hide('fade');
+            });
+
+            $('#btnLogout').click(function () {
+                sessionStorage.removeItem('accessToken');
+                window.location.href = "Login.html";
+            });
+
+            $('#btnLoadMovie').click(function () {
+                $.ajax({
+                    url: '/api/Movies/GetMoviesFromTitle',
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken')
+                    },
+                    data: {
+                        title: $('#txtSearch').val()
+                    },
+                    success: function (data) {
+                        $('#divData').removeClass('hidden');
+                        $('#divInfo').empty();
+
+                        if (data == null || data.Count == 0) {
+                            $('#divInfo').append('<p>No results found...</p>');
+                        } else {
+                            $.each(data, function (index, value) {
+
+                                var info = '<div class="col-md-4">'
+                                    + '<div class="well text-center">'
+                                    + '<img src="' + value.Poster + '" height="300">'
+                                    + '<h5>' + value.Title + '</h5>'
+                                    //+ '<button type="button" onclick="getMovie(\'' + value.imdbID + '\')" class="btn btn-primary">Show more...</button>'
+                                    + '<a class="btn btn-primary" href="Details.html?imdbId=' + value.imdbID + '">Details</a>'
+                                    + '</div></div>';
+
+                                $('#divInfo').append(info);
+                            });
+                        }
+                    },
+                    error: function (jqXHR) {
+                        if (jqXHR.status == '401') {
+                            $('#errorModal').modal('show');
+                        } else {
+                            $('#divErrorText').text(jqXHR.responseText);
+                            $('#divError').show('fade');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

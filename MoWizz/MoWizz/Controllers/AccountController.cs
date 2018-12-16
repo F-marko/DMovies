@@ -30,8 +30,6 @@ namespace MoWizz.Controllers
         public AccountController()
         {
             this.UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(ConfigurationManager.ConnectionStrings["Mongo"].ConnectionString));
-            //var userStore = new UserStore<ApplicationUser>("mongodb://localhost/Contacts");
-            //this.UserManager = new ApplicationUserManager(userStore);
         }
 
         public AccountController(ApplicationUserManager userManager,

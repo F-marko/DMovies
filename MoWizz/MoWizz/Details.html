@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>MoWizz - Details</title>
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body style="padding-top:20px">
+
+    <div class="col-md-10 col-md-offset-1">
+        <div class="well">
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="success">
+                        <td colspan="3">
+                            <h1 style="font-family:Castellar">MoWizz</h1>
+                            <input type="button" id="btnLogout" class="btn btn-success pull-right" value="Log out" />
+                            <a class="btn btn-success pull-right" href="Data.html" style="margin-right:20px">Home</a>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+        <div class="row" id="movieInfo"></div>
+
+        <div class="row hidden" id="actorInfo"></div>
+
+        <div class="modal fade" tabindex="-1" id="errorModal"
+             data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            &times;
+                        </button>
+                        <h4 class="modal-title">Session Expired</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h2 class="modal-title">Please close this message to login again</h2>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-success">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="divError" class="alert alert-danger collapse">
+            <a id="linkClose" class="close" href="#">&times;</a>
+            <div id="divErrorText"></div>
+        </div>
+    </div>
+
+    <script src="Scripts/jquery-1.10.2.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+
+    <script src="Scripts/MovieInfo.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (sessionStorage.getItem('accessToken') == null) {
+                window.location.href = "Login.html";
+            }
+
+            var url = new URL(window.location.href);
+            var id = url.searchParams.get("imdbId");
+
+            $('#errorModal').on('hidden.bs.modal', function () {
+                window.location.href = "Login.html";
+            });
+
+            $('#linkClose').click(function () {
+                $('#divError').hide('fade');
+            });
+
+            $.ajax({
+                url: 'api/Movies/GetMovieFromId',
+                method: 'GET',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                data: {
+                    imdbId: id
+                },
+                success: function (response) {
+                    var actors = '';
+                    response.Actors.split(',').forEach(function (actor) {
+                        actors += '<a onclick="getActor(\'' + actor + '\')">' + actor + ',</a>';
+                    });
+
+                    var info =
+                        '<div class="row">'
+                        + '<div class="col-md-4">'
+                        + '<img src="' + response.Poster + '" class="thumbnail">'
+                        + '</div>'
+                        + '<div class="col-md-8">'
+                        + '<h2>' + response.Title + '</h2>'
+                        + '<ul class="list-group">'
+                        + '<li class="list-group-item"><strong>Genre:</strong> ' + response.Genre + '</li>'
+                        + '<li class="list-group-item"><strong>Released:</strong> ' + response.Released + '</li>'
+                        + '<li class="list-group-item"><strong>Rated:</strong> ' + response.Rated + '</li>'
+                        + '<li class="list-group-item"><strong>IMDB Rating:</strong> ' + response.imdbRating + '</li>'
+                        + '<li class="list-group-item"><strong>Director:</strong> ' + response.Director + '</li>'
+                        + '<li class="list-group-item"><strong>Actors:</strong> ' + actors + '</li>'
+                        + '</div>'
+                        + '<div class="row">'
+                        + '<div class="well">'
+                        + '<h3>Plot</h3>'
+                        + response.Plot
+                        + '<hr>'
+                        + '<a href="http://imdb.com/title/' + response.imdbID + '" target="_blank" class="btn btn-primary">Go to IMDB</a>'
+                        + '<a onclick="addToWatchlist(\'' + response.imdbID + '\')" class="btn btn-warning pull-right">Add To Watchlist</a>'
+                        + '</div>'
+                        + '</div>';
+
+                    $('#movieInfo').append(info);
+                },
+                error: function (jqXHR) {
+                    if (jqXHR.status == '401') {
+                        $('#errorModal').modal('show');
+                    } else {
+                        $('#divErrorText').text(jqXHR.responseText);
+                        $('#divError').show('fade');
+                    }
+                }
+            });
+
+        });
+    </script>
+</body>
+</html>

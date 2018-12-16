@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using MongoDB.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using System.Collections.Generic;
 
 namespace MoWizz.Models
 {
@@ -10,6 +11,8 @@ namespace MoWizz.Models
     public class ApplicationUser : IdentityUser
     {
         public string Email { get; set; }
+
+        public IList<string> Watchlist { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser, string> manager, string authenticationType)
         {
