@@ -14,7 +14,7 @@ namespace MoWizz.Models
 
         public string Gender { get; set; }
 
-        public IList<string> Watchlist { get; set; }
+        public List<int> Watchlist { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser, string> manager, string authenticationType)
         {

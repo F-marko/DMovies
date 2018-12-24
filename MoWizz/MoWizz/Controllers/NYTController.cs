@@ -13,7 +13,7 @@ using System.Web.Mvc;
 
 namespace MoWizz.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class NYTController : Controller {
         private readonly string NYTUri = "https://api.nytimes.com/";
         private readonly string moviesAPIKey = "81901124af3c43c5a481e667e5ee2761";

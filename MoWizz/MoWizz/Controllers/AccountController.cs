@@ -17,6 +17,7 @@ using System.Configuration;
 using MoWizz.Models;
 using MoWizz.Results;
 using MoWizz.Providers;
+using MoWizz.Repositories;
 
 namespace MoWizz.Controllers
 {
@@ -26,10 +27,14 @@ namespace MoWizz.Controllers
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
+        private readonly MovieRepository _movieRepository;
+        private readonly UserRepository _userRepository;
 
         public AccountController()
         {
             this.UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(ConfigurationManager.ConnectionStrings["Mongo"].ConnectionString));
+            _movieRepository = new MovieRepository();
+            _userRepository = new UserRepository();
         }
 
         public AccountController(ApplicationUserManager userManager,
@@ -394,6 +399,71 @@ namespace MoWizz.Controllers
 
             base.Dispose(disposing);
         }
+
+        #region Movie Methods
+
+        [Route("watchlist")]
+        public List<MovieListViewModel> GetWatchlist()
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+
+            return user.Watchlist.ConvertAll(id => {
+                var movie = _movieRepository.GetMovie(id);
+                return new MovieListViewModel
+                {
+                    Id = id,
+                    Title = movie.title,
+                    Image = movie.poster_path
+                };
+            }); 
+        }
+
+        //[HttpGet]
+        //[Route("GetWatchlist")]
+        //public HttpResponseMessage GetWatchlist(string user)
+        //{
+        //    return Request.CreateResponse(HttpStatusCode.OK, MoviesRepository.GetWatchlist(user));
+        //}
+
+        [HttpPost]
+        [Route("watchlist/add")]
+        public void AddToWatchlist(int id)
+        {
+            if (_movieRepository.GetMovie(id) == null)
+            {
+                throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
+            }
+
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            user.Watchlist.Add(id);
+
+            _userRepository.Update(user);
+        }
+
+        [HttpPost]
+        [Route("watchlist/remove")]
+        public void RemoveFromWatchlist(int id)
+        {
+            if (_movieRepository.GetMovie(id) == null)
+            {
+                throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
+            }
+
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            user.Watchlist.Remove(id);
+
+            _userRepository.Update(user);
+        }
+
+        //[HttpGet]
+        //[Route("Add")]
+        //public IHttpActionResult AddToWatchlist(string user, string imdbId)
+        //{
+        //    MoviesRepository.AddToWatchlist(user, imdbId);
+        //    return Ok();
+        //}
+
+        #endregion
 
         #region Helpers
 

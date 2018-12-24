@@ -26,10 +26,10 @@ namespace MoWizz.Controllers
 
         public ActionResult Index()
         {
-            if (!Request.IsAuthenticated)
-            {
-                return View();
-            }
+            //if (!Request.IsAuthenticated)
+            //{
+            //    return View();
+            //}
 
             HomeViewModel model = new HomeViewModel();
 

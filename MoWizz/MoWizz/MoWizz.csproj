@@ -19,11 +19,10 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort>
-    </IISExpressSSLPort>
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
+    <IISExpressSSLPort>44316</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -229,7 +228,6 @@
     <Compile Include="Controllers\NYTController.cs" />
     <Compile Include="Controllers\TMDBController.cs" />
     <Compile Include="Controllers\TraktTvController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Controllers\MoviesController.cs" />
     <Compile Include="Facebook\FacebookBackChannelHandler.cs" />
     <Compile Include="Global.asax.cs">
@@ -237,26 +235,44 @@
     </Compile>
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AppModels\MovieRating.cs" />
     <Compile Include="Models\ArticleResponseModel.cs" />
     <Compile Include="Models\CreditsResponse.cs" />
     <Compile Include="Models\DetailsResponse.cs" />
     <Compile Include="Models\DetailsViewModel.cs" />
+    <Compile Include="Models\MovieListViewModel.cs" />
+    <Compile Include="Models\new\BelongsToCollection.cs" />
+    <Compile Include="Models\new\Cast.cs" />
+    <Compile Include="Models\new\Crew.cs" />
+    <Compile Include="Models\new\Genre.cs" />
+    <Compile Include="Models\new\Keyword.cs" />
+    <Compile Include="Models\new\Movie.cs" />
+    <Compile Include="Models\new\ProductionCompany.cs" />
+    <Compile Include="Models\new\ProductionCountry.cs" />
+    <Compile Include="Models\new\Rating.cs" />
+    <Compile Include="Models\new\SpokenLanguage.cs" />
+    <Compile Include="Models\SearchParameterModel.cs" />
     <Compile Include="Models\GenreResponse.cs" />
     <Compile Include="Models\HomeViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\MovieImages.cs" />
+    <Compile Include="Models\PagingParameterModel.cs" />
     <Compile Include="Models\PopularMovieViewModel.cs" />
     <Compile Include="Models\ResultModel.cs" />
     <Compile Include="Models\ReviewModel.cs" />
     <Compile Include="Models\SimilarMoviesResponse.cs" />
     <Compile Include="Models\TMDBPopularMoviesResponse.cs" />
-    <Compile Include="Models\Movie.cs" />
     <Compile Include="Models\OMDBApiModel.cs" />
     <Compile Include="Models\TVMazeApiModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
+    <Compile Include="Repositories\MovieRepository.cs" />
     <Compile Include="Repositories\MoviesRepository.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
+    <Compile Include="Services\MoviesService.cs" />
+    <Compile Include="Services\Sorters\ISorter.cs" />
+    <Compile Include="Services\Sorters\SorterFactory.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1840,6 +1856,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Movietest\" />
+    <Folder Include="Views\Movie\" />
+    <Folder Include="Views\test\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -1862,7 +1881,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>49891</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:49891/</IISUrl>
+          <IISUrl>https://localhost:44316/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

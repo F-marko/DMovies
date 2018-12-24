@@ -11,7 +11,7 @@ using System.Configuration;
 
 namespace MoWizz.Controllers {
 
-    [Authorize]
+    //[Authorize]
     public class TMDBController : Controller {
 
         private MongoDatabase GetMongoDB() {
