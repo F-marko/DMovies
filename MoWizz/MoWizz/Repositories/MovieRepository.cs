@@ -1,5 +1,4 @@
-﻿using Model;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using MoWizz.Models;
@@ -45,14 +44,14 @@ namespace MoWizz.Repositories
             }
         }
 
-        public void UpdateRating(int movieId, int oldUserRating, int newUserRating, bool updateCount)
+        public void UpdateRating(int movieId, int incRating, int incCount)
         {
             var moviesCollection = _database.GetCollection<Movie>("movies");
 
-            var query = Query<Movie>.EQ(movie => movie.id, movieId);
-            //var update = Update<Movie>.
+            var query = Query<Movie>.EQ(m => m.id, movieId);
+            var update = Update<Movie>.Inc(m => m.AppRating.Rating, incRating).Inc(m => m.AppRating.Count, incCount);
 
-            //moviesCollection.Update(query, update);
+            moviesCollection.Update(query, update);
         }
 
         public List<Movie> GetFilteredMovies(string search)

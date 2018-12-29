@@ -11,8 +11,14 @@ namespace EmployeeService.Facebook
             SendAsync(HttpRequestMessage request,
                       CancellationToken cancellationToken)
         {
+            System.Diagnostics.Debug.WriteLine("FacebookBackChannelHandler");
+
             if (!request.RequestUri.AbsolutePath.Contains("/oauth"))
             {
+                string url1 = request.RequestUri.AbsolutePath;
+            //    string url2 = url1.Substring(url1.IndexOf("access_token") + 13);
+            //    string accessToken = url2.Substring(0, url2.IndexOf("&"));
+                System.Diagnostics.Debug.WriteLine("Access token = " + url1);
                 request.RequestUri = new Uri(
                     request.RequestUri.AbsoluteUri.Replace("?access_token", "&access_token"));
             }

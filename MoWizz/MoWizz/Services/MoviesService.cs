@@ -1,4 +1,4 @@
-﻿using Model;
+﻿using MoWizz.Models;
 using MoWizz.Repositories;
 using System;
 using System.Collections.Generic;

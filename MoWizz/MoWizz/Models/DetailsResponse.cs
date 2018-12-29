@@ -34,6 +34,18 @@ namespace MoWizz.Models
     {
         public int id { get; set; }
         public string name { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            var genre = obj as Genre;
+            return genre != null &&
+                   name == genre.name;
+        }
+
+        public override int GetHashCode()
+        {
+            return 363513814 + EqualityComparer<string>.Default.GetHashCode(name);
+        }
     }
 
     public class Company

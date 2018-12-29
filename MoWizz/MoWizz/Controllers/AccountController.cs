@@ -18,6 +18,7 @@ using MoWizz.Models;
 using MoWizz.Results;
 using MoWizz.Providers;
 using MoWizz.Repositories;
+using System.Net;
 
 namespace MoWizz.Controllers
 {
@@ -57,6 +58,8 @@ namespace MoWizz.Controllers
         }
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
+
+        #region ASPIdentity Methods
 
         // GET api/Account/UserInfo
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
@@ -238,6 +241,7 @@ namespace MoWizz.Controllers
         [Route("ExternalLogin", Name = "ExternalLogin")]
         public async Task<IHttpActionResult> GetExternalLogin(string provider, string error = null)
         {
+            System.Diagnostics.Debug.WriteLine("Ulazim u ExternalLogin");
             if (error != null)
             {
                 return Redirect(Url.Content("~/") + "#error=" + Uri.EscapeDataString(error));
@@ -269,6 +273,8 @@ namespace MoWizz.Controllers
 
             if (hasRegistered)
             {
+                System.Diagnostics.Debug.WriteLine("Registriran");
+
                 Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
 
                 ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(UserManager,
@@ -281,10 +287,14 @@ namespace MoWizz.Controllers
             }
             else
             {
+                System.Diagnostics.Debug.WriteLine("Nije registriran");
+
                 IEnumerable<Claim> claims = externalLogin.GetClaims();
                 ClaimsIdentity identity = new ClaimsIdentity(claims, OAuthDefaults.AuthenticationType);
                 Authentication.SignIn(identity);
             }
+
+            System.Diagnostics.Debug.WriteLine("Izlazim iz ExternalLogin");
 
             return Ok();
         }
@@ -364,14 +374,20 @@ namespace MoWizz.Controllers
                 return InternalServerError();
             }
 
-            var user = new ApplicationUser() { UserName = info.Email, Email = info.Email };
-
-            System.Diagnostics.Debug.WriteLine("stvorio usera");
+            var user = new ApplicationUser() {
+                UserName = info.Email.Split('@')[0],
+                Email = info.Email
+            };
+            
+            System.Diagnostics.Debug.WriteLine("stvorio usera " + user.UserName + " " + user.Email + " " + user.Id);
 
 
             IdentityResult result = await UserManager.CreateAsync(user);
             if (!result.Succeeded)
             {
+                System.Diagnostics.Debug.WriteLine("Result nije succeded");
+                System.Diagnostics.Debug.WriteLine(string.Join(", ", result.Errors));
+
                 return GetErrorResult(result);
             }
 
@@ -384,7 +400,7 @@ namespace MoWizz.Controllers
                 return GetErrorResult(result);
             }
 
-            System.Diagnostics.Debug.WriteLine("vracam ok");
+            System.Diagnostics.Debug.WriteLine("vracam ok ");
 
             return Ok();
         }
@@ -400,14 +416,18 @@ namespace MoWizz.Controllers
             base.Dispose(disposing);
         }
 
-        #region Movie Methods
+        #endregion
 
+        #region App Methods
+
+        [HttpGet]
         [Route("watchlist")]
         public List<MovieListViewModel> GetWatchlist()
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
 
-            return user.Watchlist.ConvertAll(id => {
+            return user.Watchlist.ConvertAll(id =>
+            {
                 var movie = _movieRepository.GetMovie(id);
                 return new MovieListViewModel
                 {
@@ -415,7 +435,9 @@ namespace MoWizz.Controllers
                     Title = movie.title,
                     Image = movie.poster_path
                 };
-            }); 
+            });
+
+            return null;
         }
 
         //[HttpGet]
@@ -427,7 +449,7 @@ namespace MoWizz.Controllers
 
         [HttpPost]
         [Route("watchlist/add")]
-        public void AddToWatchlist(int id)
+        public void AddToWatchlist([FromBody]int id)
         {
             if (_movieRepository.GetMovie(id) == null)
             {
@@ -442,7 +464,7 @@ namespace MoWizz.Controllers
 
         [HttpPost]
         [Route("watchlist/remove")]
-        public void RemoveFromWatchlist(int id)
+        public void RemoveFromWatchlist([FromBody]int id)
         {
             if (_movieRepository.GetMovie(id) == null)
             {
@@ -453,6 +475,28 @@ namespace MoWizz.Controllers
             user.Watchlist.Remove(id);
 
             _userRepository.Update(user);
+        }
+
+        [HttpPost]
+        [Route("ratings/rate")]
+        public void Rate([FromBody]int movieId, [FromBody]int rating)
+        {
+            if (_movieRepository.GetMovie(movieId) == null)
+            {
+                throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
+            }
+
+            var user = UserManager.FindById(User.Identity.GetUserId());
+
+            int incRating = rating;
+            int incCount = 1;
+            if (user.Ratings.Exists(mr => mr.MovieId == movieId))
+            {
+                incCount = 0;
+                incRating -= user.Ratings.Find(mr => mr.MovieId == movieId).Rating;
+            }
+
+            _movieRepository.UpdateRating(movieId, incRating, incCount);
         }
 
         //[HttpGet]

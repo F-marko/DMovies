@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using EmployeeService.Facebook;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
@@ -70,7 +71,16 @@ namespace MoWizz
                 AppId = "171497007115533",
                 AppSecret = "2b24f7dbd4130d4b9c776cef8999ca04",
                 BackchannelHttpHandler = new FacebookBackChannelHandler(),
-                UserInformationEndpoint = "https://graph.facebook.com/v2.4/me?fields=id,email,gender"
+                UserInformationEndpoint = "https://graph.facebook.com/v2.4/me?fields=id,email,gender",
+                Provider = new FacebookAuthenticationProvider
+                {
+                    OnAuthenticated = (context) =>
+                    {
+                        context.Identity.AddClaim(new System.Security.Claims.Claim("FacebookAccessToken", context.AccessToken));
+                        System.Diagnostics.Debug.WriteLine("Access: " + context.AccessToken);
+                        return Task.FromResult(0);
+                    }
+                }
             };
 
             facebookOptions.Scope.Add("email");

@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace MoWizz.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class TraktTvController : Controller
     {
         private readonly Uri baseAddress = new Uri("https://api.trakt.tv/");

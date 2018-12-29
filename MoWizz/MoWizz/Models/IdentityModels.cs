@@ -4,6 +4,7 @@ using Microsoft.AspNet.Identity;
 using MongoDB.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System.Collections.Generic;
+using MoWizz.Models.AppModels;
 
 namespace MoWizz.Models
 {
@@ -14,7 +15,11 @@ namespace MoWizz.Models
 
         public string Gender { get; set; }
 
+        public List<int> Watched { get; set; }
+
         public List<int> Watchlist { get; set; }
+
+        public List<MovieRating> Ratings { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser, string> manager, string authenticationType)
         {

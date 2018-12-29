@@ -1,7 +1,7 @@
-﻿using Model;
-using MoWizz.Models;
+﻿using MoWizz.Models;
 using MoWizz.Models.TVMazeApiModel;
 using MoWizz.Repositories;
+using MoWizz.Services.Sorters;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -28,6 +28,15 @@ namespace MoWizz.Controllers
         [Route("")]
         public HttpResponseMessage GetMovies([FromUri]PagingParameterModel pagingParameterModel, [FromUri]SearchParameterModel searchParameterModel)
         {
+            //System.Diagnostics.Debug.WriteLine("Session " + System.Web.HttpContext.Current.Session!=null);
+
+            //foreach (string key in HttpContext.Current.Session.Contents)
+            //{
+            //    string value = "Key: " + key + ", Value: " + HttpContext.Current.Session[key].ToString();
+
+            //    System.Diagnostics.Debug.WriteLine(value);
+            //}
+
             if (pagingParameterModel == null)
             {
                 pagingParameterModel = new PagingParameterModel();
@@ -39,7 +48,11 @@ namespace MoWizz.Controllers
             }
 
             // list of all movies
-            var source = _movieRepository.GetMovies(searchParameterModel.SearchString).AsQueryable();
+            var source = _movieRepository.GetMovies(searchParameterModel.SearchString);
+
+            var filtered = Filter(source, searchParameterModel.Year, searchParameterModel.Genre);
+
+            var sorted = new SorterFactory().Get(searchParameterModel.Order).Sorted(filtered).AsQueryable();
 
             // number of movies in db
             int count = source.Count();
@@ -51,7 +64,7 @@ namespace MoWizz.Controllers
 
             int TotalPages = (int)Math.Ceiling(count / (double)PageSize);
 
-            var items = source
+            var items = sorted
                         .Skip((CurrentPage - 1) * PageSize)
                         .Take(PageSize)
                         .ToList();
@@ -91,35 +104,36 @@ namespace MoWizz.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, item);
         }
 
-        public HttpResponseMessage UpdateRating([FromBody]int movieId, [FromBody]int rating)
+        #region Helper methods
+
+        private List<Movie> Filter(List<Movie> source, string year, string genreName)
         {
-            throw new NotImplementedException();
+            if (genreName.Equals("All") && year.Equals("All"))
+            {
+                return source;
+            }
+
+            if (!genreName.Equals("All") && !year.Equals("All"))
+            {
+                var genre = new Genre
+                {
+                    name = genreName
+                };
+                return source.FindAll(m => m.genres.Contains(genre) && DateTime.Parse(m.release_date).Year.Equals(DateTime.Parse(year + "-01-01").Year));
+            }
+
+            if (!genreName.Equals("All"))
+            {
+                var genre = new Genre
+                {
+                    name = genreName
+                };
+                return source.FindAll(m => m.genres.Contains(genre));
+            }
+
+            return source.FindAll(m => DateTime.Parse(m.release_date).Year.Equals(DateTime.Parse(year + "-01-01").Year));
         }
 
-        //[HttpGet]
-        //[Route("GetActor")]
-        //public HttpResponseMessage GetActor(string name)
-        //{
-        //    string apiKey = "http://api.tvmaze.com/search/people?q=";
-        //    HttpWebRequest apiRequest = WebRequest.Create(apiKey + name) as HttpWebRequest;
-
-        //    string apiResponse = "";
-        //    using (HttpWebResponse response = apiRequest.GetResponse() as HttpWebResponse)
-        //    {
-        //        StreamReader reader = new StreamReader(response.GetResponseStream());
-        //        apiResponse = reader.ReadToEnd();
-        //    }
-
-        //    Actor info = JsonConvert.DeserializeObject<List<Actor>>(apiResponse).FirstOrDefault();
-
-        //    if (info == null)
-        //    {
-        //        return Request.CreateResponse(HttpStatusCode.OK, info);
-        //    }
-        //    return Request.CreateResponse(HttpStatusCode.OK, info.person);
-        //}
-
-        #region Helper methods
         private List<MovieListViewModel> ToMovieListViewModel(List<Movie> items)
         {
             var movies = new List<MovieListViewModel>();
